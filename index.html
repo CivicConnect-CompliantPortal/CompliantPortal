@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CivicConnect</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .card {
+    background: white;
+    padding: 25px;
+    width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  label {
+    font-weight: bold;
+    display: block;
+    margin-top: 12px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+
+  button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #0056b3;
+  }
+
+  .error {
+    color: red;
+    font-size: 12px;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>CivicConnect</h2>
+
+  <form id="complaintForm">
+    <label>Full Name</label>
+    <input type="text" id="name" required />
+
+    <label>ID Type</label>
+    <select id="idType" required>
+      <option value="">Select ID</option>
+      <option value="aadhar">Aadhar</option>
+      <option value="pan">PAN</option>
+      <option value="voter">Voter ID</option>
+    </select>
+
+    <label>ID Number</label>
+    <input type="text" id="idNumber" required />
+    <div id="idError" class="error"></div>
+
+   <label>Complaint Type</label>
+    <select id="CType" required>
+      <option value="">Compliant Type</option>
+      <option value="Infrastructure">Infrastructure</option>
+      <option value="Civil">Civil</option>
+      <option value="Governance">Governance</option>
+    </select>
+
+    <label>Complaint</label>
+    <textarea id="complaint" rows="4" required></textarea>
+
+    <button type="submit">Submit Complaint</button>
+  </form>
+</div>
+
+<script>
+const form = document.getElementById("complaintForm");
+const idError = document.getElementById("idError");
+
+function validateID(type, value) {
+  if (type === "aadhar") {
+    return /^[0-9]{12}$/.test(value);
+  }
+  if (type === "pan") {
+    return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(value.toUpperCase());
+  }
+  if (type === "voter") {
+    return /^[A-Z0-9]{8,12}$/.test(value.toUpperCase());
+  }
+  return false;
+}
+
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const idType = document.getElementById("idType").value;
+  const idNumber = document.getElementById("idNumber").value.trim();
+  const complaint = document.getElementById("complaint").value.trim();
+
+  idError.textContent = "";
+
+  if (!validateID(idType, idNumber)) {
+    idError.textContent = "Invalid ID format.";
+    return;
+  }
+
+  const data = {
+    name,
+    idType,
+    idNumber,
+    complaint
+  };
+
+  console.log("Complaint Submitted:", data);
+  alert("Complaint submitted successfully!");
+
+  form.reset();
+});
+</script>
+
+</body>
+</html>

@@ -5,4 +5,4 @@ Built as a part of BITS Pilani M Tech Coursework. Team mates R D Pradeekar, Anto
 
 Initial Version of UI
 
-image
+![Uploading image.png…]()

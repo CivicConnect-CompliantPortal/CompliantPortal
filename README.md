@@ -5,4 +5,5 @@ Built as a part of BITS Pilani M Tech Coursework. Team mates R D Pradeekar, Anto
 
 Initial Version of UI
 
-![Uploading image.png…]()
+<img width="660" height="826" alt="image" src="https://github.com/user-attachments/assets/75d59d77-c963-4173-8785-78b9ac5dab46" />
+

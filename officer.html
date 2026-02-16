@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Officer Dashboard</title>
+<style>
+body {
+  font-family: Arial;
+  background:#f2f2f2;
+  padding:20px;
+}
+.card {
+  background:white;
+  padding:15px;
+  margin-bottom:15px;
+  border-radius:8px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+button {
+  padding:8px 12px;
+  margin-top:8px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Officer Dashboard</h2>
+
+<input type="file" id="fileInput" accept=".txt">
+<div id="container"></div>
+
+<script>
+let complaints = [];
+
+document.getElementById("fileInput").addEventListener("change", function(e){
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    parseText(event.target.result);
+  };
+  reader.readAsText(file);
+});
+
+function parseText(text) {
+  complaints = text.trim().split("\n").map(line => {
+    const parts = line.split("|");
+    return {
+      name: parts[0],
+      idType: parts[1],
+      idNumber: parts[2],
+      complaint: parts[3],
+      status: parts[4] || "Pending",
+      notes: ""
+    };
+  });
+  render();
+}
+
+function render() {
+  const container = document.getElementById("container");
+  container.innerHTML = "";
+
+  complaints.forEach((c, i) => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <p><b>Name:</b> ${c.name}</p>
+      <p><b>ID:</b> ${c.idType}</p>
+      <p><b>Complaint:</b> ${c.complaint}</p>
+      <p><b>Status:</b> ${c.status}</p>
+
+      <label>Change Status</label>
+      <select onchange="updateStatus(${i}, this.value)">
+        <option ${c.status==="Pending"?"selected":""}>Pending</option>
+        <option ${c.status==="In Progress"?"selected":""}>In Progress</option>
+        <option ${c.status==="Resolved"?"selected":""}>Resolved</option>
+      </select>
+
+      <label>Notes</label>
+      <textarea onchange="addNotes(${i}, this.value)">${c.notes}</textarea>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+function updateStatus(i, val) {
+  complaints[i].status = val;
+}
+
+function addNotes(i, val) {
+  complaints[i].notes = val;
+}
+</script>
+
+</body>
+</html>

@@ -3,120 +3,131 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CivicConnect</title>
+<title>CivicConnect Portal</title>
 
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f2f2f2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
+html { scroll-behavior: smooth; }
 
-  .card {
-    background: white;
-    padding: 25px;
-    width: 400px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+  padding: 20px;
+}
 
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
+h2 { text-align: center; }
 
-  label {
-    font-weight: bold;
-    display: block;
-    margin-top: 12px;
-  }
+.container {
+  max-width: 900px;
+  margin: auto;
+}
 
-  input, select, textarea {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-  }
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
 
-  button {
-    margin-top: 15px;
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    background: #007bff;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-  }
+input, select, textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
 
-  button:hover {
-    background: #0056b3;
-  }
+button {
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+}
 
-  .error {
-    color: red;
-    font-size: 12px;
-  }
+button:hover { background: #0056b3; }
+
+.error { color:red; font-size:12px; }
+.navBtn { width:auto; padding:8px 14px; }
 </style>
 </head>
 
 <body>
 
+<h2>CivicConnect Portal</h2>
+
+<div style="text-align:center; margin-bottom:15px;">
+  <a href="#officerSection">
+    <button class="navBtn">Go to Officer Dashboard</button>
+  </a>
+</div>
+
+<div class="container">
+
+<!-- Citizen Section -->
 <div class="card">
-  <h2>CivicConnect</h2>
+<h3>Submit Complaint</h3>
+<form id="complaintForm">
 
-  <form id="complaintForm">
-    <label>Full Name</label>
-    <input type="text" id="name" required />
+<label>Full Name</label>
+<input type="text" id="name" required />
 
-    <label>ID Type</label>
-    <select id="idType" required>
-      <option value="">Select ID</option>
-      <option value="aadhar">Aadhar</option>
-      <option value="pan">PAN</option>
-      <option value="voter">Voter ID</option>
-    </select>
+<label>ID Type</label>
+<select id="idType" required>
+<option value="">Select ID</option>
+<option value="aadhar">Aadhar</option>
+<option value="pan">PAN</option>
+<option value="voter">Voter ID</option>
+</select>
 
-    <label>ID Number</label>
-    <input type="text" id="idNumber" required />
-    <div id="idError" class="error"></div>
+<label>ID Number</label>
+<input type="text" id="idNumber" required />
+<div id="idError" class="error"></div>
 
-   <label>Complaint Type</label>
-    <select id="CType" required>
-      <option value="">Compliant Type</option>
-      <option value="Infrastructure">Infrastructure</option>
-      <option value="Civil">Civil</option>
-      <option value="Governance">Governance</option>
-    </select>
+<label>Complaint Type</label>
+<select id="CType" required>
+<option value="">Complaint Type</option>
+<option value="Infrastructure">Infrastructure</option>
+<option value="Civil">Civil</option>
+<option value="Governance">Governance</option>
+</select>
 
-    <label>Complaint</label>
-    <textarea id="complaint" rows="4" required></textarea>
+<label>Complaint</label>
+<textarea id="complaint" rows="3" required></textarea>
 
-    <button type="submit">Submit Complaint</button>
-  </form>
+<button type="submit">Submit & Save File</button>
+</form>
+</div>
+
+<!-- Officer Section -->
+<div class="card" id="officerSection">
+<h3>Officer Dashboard</h3>
+<input type="file" id="fileInput" accept=".txt">
+<div id="officerContainer"></div>
+</div>
+
 </div>
 
 <script>
+/* ---------- Citizen Logic ---------- */
 const form = document.getElementById("complaintForm");
 const idError = document.getElementById("idError");
 
 function validateID(type, value) {
-  if (type === "aadhar") {
-    return /^[0-9]{12}$/.test(value);
-  }
-  if (type === "pan") {
-    return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(value.toUpperCase());
-  }
-  if (type === "voter") {
-    return /^[A-Z0-9]{8,12}$/.test(value.toUpperCase());
-  }
+  if (type === "aadhar") return /^[0-9]{12}$/.test(value);
+  if (type === "pan") return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(value.toUpperCase());
+  if (type === "voter") return /^[A-Z0-9]{8,12}$/.test(value.toUpperCase());
   return false;
+}
+
+function downloadFile(text) {
+  const blob = new Blob([text], { type: "text/plain" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "complaints.txt";
+  link.click();
 }
 
 form.addEventListener("submit", function(e) {
@@ -125,6 +136,7 @@ form.addEventListener("submit", function(e) {
   const name = document.getElementById("name").value.trim();
   const idType = document.getElementById("idType").value;
   const idNumber = document.getElementById("idNumber").value.trim();
+  const cType = document.getElementById("CType").value;
   const complaint = document.getElementById("complaint").value.trim();
 
   idError.textContent = "";
@@ -134,18 +146,69 @@ form.addEventListener("submit", function(e) {
     return;
   }
 
-  const data = {
-    name,
-    idType,
-    idNumber,
-    complaint
-  };
+  const line = `${name}|${idType}|${idNumber}|${cType}|${complaint}|Pending\n`;
+  downloadFile(line);
 
-  console.log("Complaint Submitted:", data);
-  alert("Complaint submitted successfully!");
-
+  alert("Complaint saved locally!");
   form.reset();
 });
+
+/* ---------- Officer Logic ---------- */
+let complaints = [];
+
+document.getElementById("fileInput").addEventListener("change", function(e){
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    parseText(event.target.result);
+  };
+  reader.readAsText(file);
+});
+
+function parseText(text) {
+  complaints = text.trim().split("\n").map(line => {
+    const p = line.split("|");
+    return {
+      name:p[0], idType:p[1], idNumber:p[2],
+      cType:p[3], complaint:p[4],
+      status:p[5] || "Pending", notes:""
+    };
+  });
+  renderComplaints();
+}
+
+function renderComplaints() {
+  const container = document.getElementById("officerContainer");
+  container.innerHTML = "";
+
+  complaints.forEach((c,i)=>{
+    const div=document.createElement("div");
+    div.className="card";
+
+    div.innerHTML=`
+      <p><b>Name:</b> ${c.name}</p>
+      <p><b>Type:</b> ${c.cType}</p>
+      <p><b>Complaint:</b> ${c.complaint}</p>
+      <p><b>Status:</b> ${c.status}</p>
+
+      <label>Change Status</label>
+      <select onchange="updateStatus(${i},this.value)">
+        <option ${c.status==='Pending'?'selected':''}>Pending</option>
+        <option ${c.status==='In Progress'?'selected':''}>In Progress</option>
+        <option ${c.status==='Resolved'?'selected':''}>Resolved</option>
+      </select>
+
+      <label>Notes</label>
+      <textarea onchange="addNotes(${i},this.value)">${c.notes}</textarea>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function updateStatus(i,val){ complaints[i].status=val; }
+function addNotes(i,val){ complaints[i].notes=val; }
 </script>
 
 </body>

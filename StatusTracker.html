@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CivicConnect - Track Status</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+button {
+  margin-top: 12px;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+.resultCard {
+  background: #fafafa;
+  border-left: 5px solid #007bff;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Track Complaint Status</h2>
+
+<div class="container">
+<div class="card">
+
+<label>Full Name</label>
+<input type="text" id="trackName">
+
+<label>ID Number</label>
+<input type="text" id="trackId">
+
+<button onclick="trackStatus()">Check Status</button>
+
+<div id="statusResult"></div>
+
+</div>
+</div>
+
+<script>
+/* -------- HARD-CODED COMPLAINT DATA -------- */
+const complaintsData = [
+  {
+    name: "John Doe",
+    idNumber: "123456789012",
+    type: "Infrastructure",
+    complaint: "Road damaged near school",
+    status: "In Progress"
+  },
+  {
+    name: "Mary Roy",
+    idNumber: "ABCDE1234F",
+    type: "Civil",
+    complaint: "Water leakage in street",
+    status: "Resolved"
+  },
+  {
+    name: "Alex Kumar",
+    idNumber: "AB1234567",
+    type: "Governance",
+    complaint: "Street light not working",
+    status: "Pending"
+  }
+];
+
+/* -------- TRACK FUNCTION -------- */
+function trackStatus() {
+  const name = document.getElementById("trackName").value.trim().toLowerCase();
+  const id = document.getElementById("trackId").value.trim();
+  const resultDiv = document.getElementById("statusResult");
+
+  resultDiv.innerHTML = "";
+
+  const matches = complaintsData.filter(c =>
+    c.name.toLowerCase() === name && c.idNumber === id
+  );
+
+  if (matches.length === 0) {
+    resultDiv.innerHTML = "<p style='color:red'>No complaints found.</p>";
+    return;
+  }
+
+  matches.forEach(c => {
+    resultDiv.innerHTML += `
+      <div class="resultCard">
+        <p><b>Complaint Type:</b> ${c.type}</p>
+        <p><b>Complaint:</b> ${c.complaint}</p>
+        <p><b>Status:</b> ${c.status}</p>
+      </div>
+    `;
+  });
+}
+</script>
+
+</body>
+</html>

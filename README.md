@@ -10,3 +10,9 @@ Initial Version of Compliant UI
 Initial Version of Officer's UI
 
 <img width="1055" height="907" alt="image" src="https://github.com/user-attachments/assets/0acd0a99-eb5a-4ed2-93dc-4f2a25eb33f8" />
+
+
+Status Tracker UI
+
+<img width="1008" height="421" alt="image" src="https://github.com/user-attachments/assets/42bf90ce-5eb3-4bc5-9676-17345374d876" />
+

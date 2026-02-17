@@ -62,6 +62,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object> handleRuntime(RuntimeException ex) {
+        return new ResponseEntity<>(Map.of(
+                "timestamp", LocalDateTime.now(),
+                "error", "Resource Error",
+                "message", ex.getMessage()
+        ), HttpStatus.NOT_FOUND);
+    }
+
     record ErrorResponse(int status, String message, LocalDateTime timestamp) {}
 
     record ValidationErrorResponse(int status, String message, LocalDateTime timestamp, Map<String, String> errors) {}
